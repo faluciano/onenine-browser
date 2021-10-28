@@ -13,18 +13,18 @@ from django.urls import reverse
 @login_required(login_url="/login/")
 def index(request):
     context = {'segment': 'index'}
-
+    print(f"req {request}")
     html_template = loader.get_template('home/index.html')
     return HttpResponse(html_template.render(context, request))
 
 
 @login_required(login_url="/login/")
 def pages(request):
-    context = {}
+    context = {'test':'testing'}
     # All resource paths end in .html.
     # Pick out the html file name from the url. And load that template.
     try:
-
+        print(f"req {request}")
         load_template = request.path.split('/')[-1]
 
         if load_template == 'admin':
