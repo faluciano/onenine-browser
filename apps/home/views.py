@@ -48,3 +48,6 @@ def browser(request,context,load_template):
         os.mkdir(f'onenine_priv/{request.user}')
     html_template = loader.get_template('home/' + load_template)
     return HttpResponse(html_template.render(context, request))
+
+def create_folder(prev,name):
+    os.mkdir(f'{prev}/{name}')
