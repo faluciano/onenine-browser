@@ -2,6 +2,8 @@
 """
 Copyright (c) 2019 - present AppSeed.us
 """
+import math
+import pathlib
 
 from django import template
 from django.contrib.auth.decorators import login_required
@@ -9,6 +11,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.template import loader
 from django.urls import reverse
 import os
+
 
 @login_required(login_url="/login/")
 def index(request):
@@ -19,7 +22,7 @@ def index(request):
 
 @login_required(login_url="/login/")
 def pages(request):
-    context = {'user':request.user}
+    context = {'user': request.user}
     # All resource paths end in .html.
     # Pick out the html file name from the url. And load that template.
     try:
@@ -28,7 +31,7 @@ def pages(request):
             return HttpResponseRedirect(reverse('admin:index'))
         context['segment'] = load_template
         if load_template == 'browser.html':
-            return browser(request,context,load_template)
+            return browser(request, context, load_template)
         html_template = loader.get_template('home/' + load_template)
         return HttpResponse(html_template.render(context, request))
 
@@ -41,13 +44,43 @@ def pages(request):
         html_template = loader.get_template('home/page-500.html')
         return HttpResponse(html_template.render(context, request))
 
-def browser(request,context,load_template):
+
+def browser(request, context, load_template):
     if not os.path.exists('onenine_priv'):
         os.mkdir('onenine_priv')
     if not os.path.exists(f'onenine_priv/{request.user}'):
         os.mkdir(f'onenine_priv/{request.user}')
+
+    dir = os.path.normpath(f'onenine_priv/{request.user}')
+
+    if request.GET.get('dir') is not None:
+        print("hello")
+        dir = request.GET.get('dir')
+
+    file_path = []
+    file_size = []
+
+    for path in pathlib.Path(dir).glob('*'):
+        file_path.append(path)
+        file_size.append(convert_size(os.path.getsize(path)))
+
+    print(file_size)
+
+    context['files'] = zip(file_path, file_size)
+
     html_template = loader.get_template('home/' + load_template)
     return HttpResponse(html_template.render(context, request))
 
-def create_folder(prev,name):
+
+def create_folder(prev, name):
     os.mkdir(f'{prev}/{name}')
+
+
+def convert_size(size_bytes):
+    if size_bytes == 0:
+        return "0B"
+    size_name = ("B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB")
+    i = int(math.floor(math.log(size_bytes, 1024)))
+    p = math.pow(1024, i)
+    s = round(size_bytes / p, 2)
+    return "%s %s" % (s, size_name[i])
