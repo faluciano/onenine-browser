@@ -47,10 +47,19 @@
                         </tr>
                     </thead>
                     <tbody class="list">
-                        {% for file, size in files %}
+                        {% for file, size, type in files %}
                             <tr>
                                 <td class="text-dark">
-                                    <div>
+                                    <div class="media align-items-center">
+                                        {% if file.is_dir %}
+                                            <i class="ni ni-folder-17 text-blue" style="padding-right: 20px"></i>
+                                        {% elif type == '.png' %}
+                                            <i class="fas fa-file-image text-yellow" style="padding-right: 20px; font-size: 1.3em;"></i>
+                                        {% elif type == '.csv' %}
+                                            <i class="fas fa-file-csv text-orange" style="padding-right: 20px; font-size: 1.3em;"></i>
+                                        {% else %}
+                                            <i class="fas fa-file-alt text-green" style="padding-right: 20px; font-size: 1.3em;"></i>
+                                        {% endif %}
                                         {% if file.is_dir %}
                                             <a class="name mb-0 text-sm" href="?dir={{ file }}">{{ file.name }}</a>
                                         {% elif file.is_file %}
@@ -58,12 +67,12 @@
                                         {% endif %}
                                     </div>
                                 </td>
-                                <td class="text-dark" style="display: flex; justify-content: space-between;">
+                                <td class="text-dark">
                                     <div>
                                         {% if file.is_dir %}
-                                            <p>--</p>
+                                            <span class="status">--</span>
                                         {% elif file.is_file %}
-                                            <p> {{ size }}</p>
+                                            <span class="status"> {{ size }}</span>
                                         {% endif %}
                                     </div>
                                 </td>

@@ -59,14 +59,21 @@ def browser(request, context, load_template):
 
     file_path = []
     file_size = []
+    file_type = []
 
     for path in pathlib.Path(dir).glob('*'):
         file_path.append(path)
         file_size.append(convert_size(os.path.getsize(path)))
 
-    print(file_size)
+        # print(type(os.path.splitext(path)[1]))
+        if path.is_file():
+            file_type.append(os.path.splitext(path)[1].lower())
+        else:
+            file_type.append('dir')
 
-    context['files'] = zip(file_path, file_size)
+    print(file_type)
+
+    context['files'] = zip(file_path, file_size, file_type)
 
     html_template = loader.get_template('home/' + load_template)
     return HttpResponse(html_template.render(context, request))
