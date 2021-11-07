@@ -58,9 +58,10 @@ def browser(request, context, load_template):
     else:
         dir = request.GET.get('dir')
 
-    file_path = filetree.FileTree(None, dir, request.user).get_contents()
-    file_size = filetree.FileTree(None, dir, request.user).get_size()
-    file_type = filetree.FileTree(None, dir, request.user).get_type()
+    directory = filetree.FileTree(None, dir, request.user)
+    file_path = directory.get_contents()
+    file_size = directory.get_size()
+    file_type = directory.get_type()
 
     context['files'] = zip(file_path, file_size, file_type)
 
