@@ -3,27 +3,40 @@
 {% block title %} Profile {% endblock title %}
 
 {% block content %}
-<div class="header pb-6 d-flex align-items-center"
-     style="min-height: 500px; background-size: cover; background-position: center top;">
-  <!-- Mask -->
-  <span class="mask bg-gradient-default opacity-8"></span>
-  <!-- Header container -->
-  <div class="container-fluid d-flex align-items-center">
-    <div class="row">
-      <div class="col-lg-7 col-md-10">
-        <h1 class="display-2 text-white"> 
-          Hello {{ user }} 
-        </h1>
+<div class="header bg-primary pb-6">
+    <div class="container-fluid">
+      <div class="header-body">
+        <div class="row align-items-center py-4">
+          <div class="col-lg-6 col-7">
+            <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
+              <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
+                <li class="breadcrumb-item"><a href="#"><i class="fas fa-home"></i></a></li>
+                <li class="breadcrumb-item"><a href="#">Tables</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Tables</li>
+              </ol>
+            </nav>
+          </div>
+          <div class="col-lg-6 col-5 text-right">
+            <a href="#" class="btn btn-sm btn-neutral">New Folder</a>
+            <a href="#" class="btn btn-sm btn-neutral">Upload File</a>
+          </div>
+        </div>
       </div>
     </div>
   </div>
-</div>
 <!-- Page content -->
 
-<div class="card-body container-fluid">
-            <div class="table-responsive">
-                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                    <thead>
+<div class="container-fluid mt--6">
+    <div class="table-responsive">
+        <div class="row">
+            <div class="col">
+                <div class="card">
+                  <!-- Card header -->
+                  <div class="card-header border-0">
+                    <h3 class="mb-0">File Browser</h3>
+                  </div>
+                <table class="table align-items-center table-flush">
+                    <thead class="thead-light">
                         <tr>
                             <th>
                                 Name
@@ -33,15 +46,15 @@
                             </th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody class="list">
                         {% for file, size in files %}
                             <tr>
                                 <td class="text-dark">
                                     <div>
                                         {% if file.is_dir %}
-                                            <a class="" href="?dir={{ file }}">{{ file.name }}</a>
+                                            <a class="name mb-0 text-sm" href="?dir={{ file }}">{{ file.name }}</a>
                                         {% elif file.is_file %}
-                                            <a class="" href="?dir={{ file }}">{{ file.name }}</a>
+                                            <a class="name mb-0 text-sm" href="?dir={{ file }}">{{ file.name }}</a>
                                         {% endif %}
                                     </div>
                                 </td>
@@ -58,7 +71,10 @@
                         {% endfor %}
                     </tbody>
                 </table>
+                </div>
             </div>
+        </div>
+    </div>
 </div>
 
 {% endblock content %}
