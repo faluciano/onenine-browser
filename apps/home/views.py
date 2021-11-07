@@ -2,13 +2,13 @@
 """
 Copyright (c) 2019 - present AppSeed.us
 """
-
 from django import template
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template import loader
 from django.urls import reverse
 import os
+from apps.home import filetree
 
 @login_required(login_url="/login/")
 def index(request):
@@ -46,6 +46,8 @@ def browser(request,context,load_template):
         os.mkdir('onenine_priv')
     if not os.path.exists(f'onenine_priv/{request.user}'):
         os.mkdir(f'onenine_priv/{request.user}')
+    file_path = filetree.FileTree(None,f'onenine_priv/{request.user}',request.user)
+    context['path'] = file_path
     html_template = loader.get_template('home/' + load_template)
     return HttpResponse(html_template.render(context, request))
 
