@@ -2,7 +2,7 @@
 """
 Copyright (c) 2019 - present AppSeed.us
 """
-
+import json
 import os
 
 from django import template
@@ -33,6 +33,8 @@ def pages(request):
         context['segment'] = load_template
         if load_template == 'browser.html':
             return browser(request, context, load_template)
+        if load_template == 'addFolder':
+            return create_folder(request, context)
         html_template = loader.get_template('home/' + load_template)
         return HttpResponse(html_template.render(context, request))
 
@@ -58,15 +60,26 @@ def browser(request, context, load_template):
     else:
         dir = request.GET.get('dir')
 
-    file_path = filetree.FileTree(None, dir, request.user).get_contents()
-    file_size = filetree.FileTree(None, dir, request.user).get_size()
-    file_type = filetree.FileTree(None, dir, request.user).get_type()
+    fileTree = filetree.FileTree(None, dir, request.user)
+
+    file_path = fileTree.get_contents()
+    file_size = fileTree.get_size()
+    file_type = fileTree.get_type()
 
     context['files'] = zip(file_path, file_size, file_type)
+    context['curr_path'] = fileTree.get_current_path()
 
     html_template = loader.get_template('home/' + load_template)
     return HttpResponse(html_template.render(context, request))
 
 
-def create_folder(prev, name):
+def create_folder(request, context):
+    post_data = json.loads(request.body.decode("utf-8"))
+
+    prev = post_data['curr_dir']
+    name = post_data['dir_name']
+
+    html_template = loader.get_template('home/browser.html')
     os.mkdir(f'{prev}/{name}')
+    return HttpResponse(html_template.render(context, request))
+

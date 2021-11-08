@@ -29,6 +29,8 @@ class FileTree():
         # Appends all subfolders and files to contents
         dir = os.path.normpath(full_path)
 
+        self.curr_path = dir.replace('\\', '\\\\')
+
         for path in pathlib.Path(dir).glob('*'):
             self.contents.append(path)
             self.size.append(convert_size(os.path.getsize(path)))
@@ -65,4 +67,7 @@ class FileTree():
             if path[0]:
                 ret.append(path[1])
         return ret
+
+    def get_current_path(self):
+        return self.curr_path
 
