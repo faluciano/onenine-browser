@@ -60,14 +60,13 @@ def browser(request, context, load_template):
     else:
         dir = request.GET.get('dir')
 
-    fileTree = filetree.FileTree(None, dir, request.user)
-
-    file_path = fileTree.get_contents()
-    file_size = fileTree.get_size()
-    file_type = fileTree.get_type()
+    directory = filetree.FileTree(dir)
+    file_path = directory.get_contents()
+    file_size = directory.get_size()
+    file_type = directory.get_type()
 
     context['files'] = zip(file_path, file_size, file_type)
-    context['curr_path'] = fileTree.get_current_path()
+    context['curr_path'] = directory.get_current_path()
 
     html_template = loader.get_template('home/' + load_template)
     return HttpResponse(html_template.render(context, request))

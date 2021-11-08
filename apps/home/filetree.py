@@ -18,11 +18,12 @@ class FileTree():
         Class for creating a directory tree that keeps track of 
         parent directory as well as children
     """
+
     def __init__(self, full_path):
-        self.full_path = full_path # Full path of folder
-        self.contents = [] # Contains all of the subfolders and files
-        self.size = [] # Size of all the files
-        self.type = [] # Type of files
+        self.full_path = full_path  # Full path of folder
+        self.contents = []  # Contains all of the subfolders and files
+        self.size = []  # Size of all the files
+        self.type = []  # Type of files
 
         # Appends all subfolders and files to contents
         dir = os.path.normpath(full_path)
@@ -49,7 +50,5 @@ class FileTree():
         """Returns contents of the folder in a list of strings"""
         return self.type
 
-
     def get_current_path(self):
         return self.curr_path
-
