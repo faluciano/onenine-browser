@@ -18,10 +18,8 @@ class FileTree():
         Class for creating a directory tree that keeps track of 
         parent directory as well as children
     """
-    def __init__(self, prev, full_path, name):
-        self.prev = prev # Parent folder 
+    def __init__(self, full_path):
         self.full_path = full_path # Full path of folder
-        self.name = name # Name of folder
         self.contents = [] # Contains all of the subfolders and files
         self.size = [] # Size of all the files
         self.type = [] # Type of files
@@ -39,30 +37,14 @@ class FileTree():
 
     def get_contents(self):
         """Returns contents of the folder in a list of strings"""
-        ret = []
-        for path in self.contents:
-            ret.append(path)
-        return ret
+        return self.contents
 
     def get_size(self):
         """Returns contents of the folder in a list of strings"""
-        ret = []
-        for path in self.size:
-            ret.append(path)
-        return ret
+        return self.size
 
     def get_type(self):
         """Returns contents of the folder in a list of strings"""
-        ret = []
-        for path in self.type:
-            ret.append(path)
-        return ret
+        return self.type
 
-    def get_subfolders(self):
-        """Returns a list of FileTree subfolders if any"""
-        ret = []
-        for path in self.contents:
-            if path[0]:
-                ret.append(path[1])
-        return ret
 

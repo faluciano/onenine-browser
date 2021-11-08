@@ -58,7 +58,7 @@ def browser(request, context, load_template):
     else:
         dir = request.GET.get('dir')
 
-    directory = filetree.FileTree(None, dir, request.user)
+    directory = filetree.FileTree(dir)
     file_path = directory.get_contents()
     file_size = directory.get_size()
     file_type = directory.get_type()
