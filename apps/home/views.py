@@ -81,4 +81,3 @@ def create_folder(request, context):
     html_template = loader.get_template('home/browser.html')
     os.mkdir(f'{prev}/{name}')
     return HttpResponse(html_template.render(context, request))
-
