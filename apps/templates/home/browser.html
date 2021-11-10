@@ -43,6 +43,14 @@
                     </tr>
                 </thead>
                 <tbody class="list">
+
+                    {% if curr_dir != user_dir %}
+                        <tr>
+                            <td>
+                                <a class="name mb-0 text-sm" href="?dir={{ curr_dir }}\..">..</a>
+                            </td>
+                        </tr>
+                    {% endif %}
                     {% for file, size, type in files %}
                         <tr>
                             <td class="text-dark">

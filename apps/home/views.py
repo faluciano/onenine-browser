@@ -59,7 +59,6 @@ def browser(request, context, load_template):
 
     else:
         dir = request.GET.get('dir')
-
         if dir.split('\\')[1] != str(request.user):
             dir = os.path.normpath(f'onenine_priv/{request.user}')
             print("Invalid user request")
@@ -69,8 +68,11 @@ def browser(request, context, load_template):
     file_size = directory.get_size()
     file_type = directory.get_type()
 
+    context['user_dir'] = os.path.normpath(f'onenine_priv/{request.user}')
+
     context['files'] = zip(file_path, file_size, file_type)
     context['curr_path'] = directory.get_current_path()
+    context['curr_dir'] = directory.get_current_path().replace('\\\\', '\\')
 
     html_template = loader.get_template('home/' + load_template)
     return HttpResponse(html_template.render(context, request))
@@ -78,8 +80,7 @@ def browser(request, context, load_template):
 
 def create_folder(request, context):
     post_data = json.loads(request.body.decode("utf-8"))
-
-    prev = post_data['curr_dir']
+    prev = post_data['dir']
     name = post_data['dir_name']
 
     html_template = loader.get_template('home/browser.html')

@@ -19,6 +19,7 @@ function populate_nav(curr_dir) {
 }
 
 function populate_fld_btn(curr_dir) {
+    var dir = curr_dir;
 
     document.getElementById("add_folder").addEventListener("click", function () {
         document.getElementById("fld_card").style.display = "block";
@@ -29,8 +30,6 @@ function populate_fld_btn(curr_dir) {
     });
 
     document.getElementById("btn_submit").addEventListener("click", function () {
-
-        var curr_dir = curr_dir;
         var dir_name = document.getElementById("input-name").value; // Name of the new folder
         let url = window.location.href;
         url = url.substring(0, url.lastIndexOf('/')) + "/addFolder";    // post url
@@ -38,7 +37,7 @@ function populate_fld_btn(curr_dir) {
 
         fetch(url, {
             method: "POST",
-            body: JSON.stringify({dir_name, curr_dir}),
+            body: JSON.stringify({dir_name, dir}),
             headers: {
                 "X-CSRFToken": csrftoken,
                 'Content-Type': 'application/json',
