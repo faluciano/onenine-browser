@@ -60,6 +60,10 @@ def browser(request, context, load_template):
     else:
         dir = request.GET.get('dir')
 
+        if dir.split('\\')[1] != str(request.user):
+            dir = os.path.normpath(f'onenine_priv/{request.user}')
+            print("Invalid user request")
+
     directory = filetree.FileTree(dir)
     file_path = directory.get_contents()
     file_size = directory.get_size()
