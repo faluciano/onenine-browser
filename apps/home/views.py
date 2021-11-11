@@ -37,6 +37,8 @@ def pages(request):
             return create_folder(request, context)
         if load_template == 'delete':
             return delete(request, context)
+        if load_template == 'download':
+            return download(request, context)
         html_template = loader.get_template('home/' + load_template)
         return HttpResponse(html_template.render(context, request))
 
@@ -91,6 +93,14 @@ def create_folder(request, context):
 
 
 def delete(request, context):
+    post_data = json.loads(request.body.decode("utf-8"))
+    print(post_data['file'])
+
+    html_template = loader.get_template('home/browser.html')
+    return HttpResponse(html_template.render(context, request))
+
+
+def download(request, context):
     post_data = json.loads(request.body.decode("utf-8"))
     print(post_data['file'])
 

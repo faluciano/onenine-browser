@@ -59,7 +59,7 @@ function populate_delete_btn(curr_dir) {
                            .text();         // Retrieves the text within <td>
 
         let file = curr_dir + "\\\\" + file_name;
-        console.log(file)
+        let path = "/delete";
 
         $("#dlt_card").css('display', 'block');
 
@@ -68,24 +68,42 @@ function populate_delete_btn(curr_dir) {
         });
 
         $("#delete_confirm").click(function (){
-            let url = window.location.href;
-            url = url.substring(0, url.lastIndexOf('/')) + "/delete";    // post url
-            let csrftoken = Cookies.get('csrftoken');   // csrftoken
-
-            fetch(url, {
-                method: "POST",
-                body: JSON.stringify({file}),
-                headers: {
-                    "X-CSRFToken": csrftoken,
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json'
-                }
-            }).then(response => location.reload())
+            send_post_request(file, path);
 
             $("#dlt_card").css('display', 'none');
         });
 
     });
+}
+
+function populate_download_btn(curr_dir) {
+
+    $(".download_btn").click(function() {
+        let file_name = $(this).closest("tr")   // Finds the closest row <tr>
+                           .find(".name")     // Gets a descendent with class="nr"
+                           .text();         // Retrieves the text within <td>
+
+        let file = curr_dir + "\\\\" + file_name;
+        let path = "/download";
+
+        send_post_request(file, path);
+    });
+}
+
+function send_post_request(file, path) {
+    let url = window.location.href;
+    url = url.substring(0, url.lastIndexOf('/')) + path;    // post url
+    let csrftoken = Cookies.get('csrftoken');   // csrftoken
+
+    fetch(url, {
+        method: "POST",
+        body: JSON.stringify({file}),
+        headers: {
+            "X-CSRFToken": csrftoken,
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+        }
+    }).then(response => location.reload())
 }
 
 window.onload = () => {
@@ -97,5 +115,7 @@ window.onload = () => {
     populate_fld_btn(curr_dir);
     
     populate_delete_btn(curr_dir);
+
+    populate_download_btn(curr_dir)
 
 }
