@@ -19,7 +19,7 @@ function populate_nav(curr_dir) {
 }
 
 function populate_fld_btn(curr_dir) {
-    var dir = curr_dir;
+    let dir = curr_dir;
 
     document.getElementById("add_folder").addEventListener("click", function () {
         document.getElementById("fld_card").style.display = "block";
@@ -51,6 +51,43 @@ function populate_fld_btn(curr_dir) {
 
 }
 
+function populate_delete_btn(curr_dir) {
+
+    $(".delete_btn").click(function() {
+        let file_name = $(this).closest("tr")   // Finds the closest row <tr>
+                           .find(".name")     // Gets a descendent with class="nr"
+                           .text();         // Retrieves the text within <td>
+
+        let file = curr_dir + "\\\\" + file_name;
+        console.log(file)
+
+        $("#dlt_card").css('display', 'block');
+
+        $("#delete_cancel").click(function (){
+            document.getElementById("dlt_card").style.display = "none";
+        });
+
+        $("#delete_confirm").click(function (){
+            let url = window.location.href;
+            url = url.substring(0, url.lastIndexOf('/')) + "/delete";    // post url
+            let csrftoken = Cookies.get('csrftoken');   // csrftoken
+
+            fetch(url, {
+                method: "POST",
+                body: JSON.stringify({file}),
+                headers: {
+                    "X-CSRFToken": csrftoken,
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                }
+            }).then(response => location.reload())
+
+            $("#dlt_card").css('display', 'none');
+        });
+
+    });
+}
+
 window.onload = () => {
 
     const curr_dir = JSON.parse(document.getElementById('curr_path').textContent);
@@ -58,5 +95,7 @@ window.onload = () => {
     populate_nav(curr_dir);
 
     populate_fld_btn(curr_dir);
+    
+    populate_delete_btn(curr_dir);
 
 }

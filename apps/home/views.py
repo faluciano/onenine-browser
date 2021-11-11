@@ -35,6 +35,8 @@ def pages(request):
             return browser(request, context, load_template)
         if load_template == 'addFolder':
             return create_folder(request, context)
+        if load_template == 'delete':
+            return delete(request, context)
         html_template = loader.get_template('home/' + load_template)
         return HttpResponse(html_template.render(context, request))
 
@@ -85,4 +87,12 @@ def create_folder(request, context):
 
     html_template = loader.get_template('home/browser.html')
     os.mkdir(f'{prev}/{name}')
+    return HttpResponse(html_template.render(context, request))
+
+
+def delete(request, context):
+    post_data = json.loads(request.body.decode("utf-8"))
+    print(post_data['file'])
+
+    html_template = loader.get_template('home/browser.html')
     return HttpResponse(html_template.render(context, request))
