@@ -4,6 +4,7 @@ Copyright (c) 2019 - present AppSeed.us
 """
 import json
 import os
+import shutil
 
 from django import template
 from django.contrib.auth.decorators import login_required
@@ -94,8 +95,11 @@ def create_folder(request, context):
 
 def delete(request, context):
     post_data = json.loads(request.body.decode("utf-8"))
-    print(post_data['file'])
-
+    path = os.path.normpath(post_data['file'])
+    if os.path.isfile(path):
+        os.remove(path)
+    else:
+        shutil.rmtree(path)
     html_template = loader.get_template('home/browser.html')
     return HttpResponse(html_template.render(context, request))
 
