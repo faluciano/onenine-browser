@@ -1,9 +1,10 @@
+// Updates navigation bar with current file path
 function populate_nav(curr_dir) {
-    var dir_list = curr_dir.split('\\\\');
-    var file_nav = document.getElementById("file_nav");
+    let dir_list = curr_dir.split('\\\\');
+    let file_nav = document.getElementById("file_nav");
 
     for(let i = 1; i < dir_list.length; i++) {
-        var item;
+        let item;
 
         if(i === 1) {
             item = `<li class="breadcrumb-item"><a href="#"><i class="fas fa-home"></i></a></li>`;
@@ -18,55 +19,47 @@ function populate_nav(curr_dir) {
     }
 }
 
+// add folder button function
 function populate_fld_btn(curr_dir) {
     let dir = curr_dir;
 
-    document.getElementById("add_folder").addEventListener("click", function () {
-        document.getElementById("fld_card").style.display = "block";
+    $("#add_folder").click(function () {
+        $("#fld_card").css('display', 'block');
     });
 
-    document.getElementById("btn_close").addEventListener("click", function () {
-        document.getElementById("fld_card").style.display = "none";
+    $("#btn_close").click(function () {
+        $("#fld_card").css('display', 'none');
     });
 
-    document.getElementById("btn_submit").addEventListener("click", function () {
-        var dir_name = document.getElementById("input-name").value; // Name of the new folder
-        let url = window.location.href;
-        url = url.substring(0, url.lastIndexOf('/')) + "/addFolder";    // post url
-        let csrftoken = Cookies.get('csrftoken');   // csrftoken
-
-        fetch(url, {
-            method: "POST",
-            body: JSON.stringify({dir_name, dir}),
-            headers: {
-                "X-CSRFToken": csrftoken,
-                'Content-Type': 'application/json',
-                'Accept': 'application/json'
-            }
-        })
-            .then(response => location.reload())
-
+    $("#btn_submit").click(function () {
+        let dir_name = document.getElementById("input-name").value; // Name of the new folder
+        send_post_request({dir_name, dir}, "/addFolder");
         document.getElementById("fld_card").style.display = "none";
     });
 
 }
 
+// Delete button
 function populate_delete_btn(curr_dir) {
 
     $(".delete_btn").click(function() {
-        let file_name = $(this).closest("tr")   // Finds the closest row <tr>
-                           .find(".name")     // Gets a descendent with class="nr"
-                           .text();         // Retrieves the text within <td>
+
+        // finds the file name
+        let file_name = $(this).closest("tr")
+                           .find(".name")
+                           .text();
 
         let file = curr_dir + "\\\\" + file_name;
         let path = "/delete";
 
+        // display confirmation popup
         $("#dlt_card").css('display', 'block');
 
         $("#delete_cancel").click(function (){
             document.getElementById("dlt_card").style.display = "none";
         });
 
+        // Makes post request on confirmation
         $("#delete_confirm").click(function (){
             send_post_request(file, path);
 
@@ -76,22 +69,26 @@ function populate_delete_btn(curr_dir) {
     });
 }
 
+// download button
 function populate_download_btn(curr_dir) {
 
     $(".download_btn").click(function() {
-        let file_name = $(this).closest("tr")   // Finds the closest row <tr>
-                           .find(".name")     // Gets a descendent with class="nr"
-                           .text();         // Retrieves the text within <td>
+        // Finds the file name
+        let file_name = $(this).closest("tr")
+                           .find(".name")
+                           .text();
 
+        // Create a file path
         let file = curr_dir + "\\\\" + file_name;
         let path = "/download";
 
+        // Sends a post request
         send_post_request(file, path);
     });
 }
 
 function send_post_request(file, path) {
-    let url = window.location.href;
+    let url = window.location.href;     // url of current window
     url = url.substring(0, url.lastIndexOf('/')) + path;    // post url
     let csrftoken = Cookies.get('csrftoken');   // csrftoken
 
@@ -103,7 +100,7 @@ function send_post_request(file, path) {
             'Content-Type': 'application/json',
             'Accept': 'application/json'
         }
-    }).then(response => location.reload())
+    }).then(response => location.reload());
 }
 
 window.onload = () => {

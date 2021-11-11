@@ -84,8 +84,8 @@ def browser(request, context, load_template):
 
 def create_folder(request, context):
     post_data = json.loads(request.body.decode("utf-8"))
-    prev = post_data['dir']
-    name = post_data['dir_name']
+    prev = post_data['file']['dir']
+    name = post_data['file']['dir_name']
 
     html_template = loader.get_template('home/browser.html')
     os.mkdir(f'{prev}/{name}')
