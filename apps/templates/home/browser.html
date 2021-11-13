@@ -26,7 +26,8 @@
 <div class="container-fluid mt--6">
     <div class="row">
         <div class="col">
-            <div class="card">
+            {% if not is_file %}
+            <div class="card" id="browser_table">
               <!-- Card header -->
               <div class="card-header border-0">
                 <h3 class="mb-0">File Browser</h3>
@@ -99,7 +100,7 @@
                 </tbody>
             </table>
             </div>
-
+            {% endif %}
             <!-- Add new folder card -->
             <div class="card" id="fld_card" style="width: 30em; position: absolute; top: 10%; left: 20%; display: none; ">
                 <div class="card-header">
@@ -114,7 +115,7 @@
                 </div>
                 <div class="card-body">
                     <div class="form-group"  id="form-gorup-fld">
-                        <label class="form-control-label" for="input-username">Folder Name</label>
+                        <label class="form-control-label" for="form-gorup-fld">Folder Name</label>
                         <input type="text" id="input-name" class="form-control" placeholder="Folder name">
                         <div id="ValdtFldName" class="invalid-feedback" style="color: #fc4d44">
                           Please provide a valid folder name.
@@ -171,6 +172,27 @@
 
                 </div>
             </div>
+            <!--------------------------->
+            <!-------File preview-------->
+            {% if is_file %}
+                <div class="card">
+                    <!-- Card header -->
+                    <div class="card-header border-0">
+                        <div class="row align-items-center">
+                        <div class="col-8">
+                          <h3 class="mb-0">File Preview</h3>
+                        </div>
+                        <div class="col-4 text-right">
+                          <a class="btn_close" href="?dir={{ curr_dir }}\.." style="cursor: pointer">&times;</a>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- Card body -->
+                    <div class="card-body">
+                        <p>{{ file_type }}</p>
+                    </div>
+                </div>
+            {% endif %}
             <!--------------------------->
         </div>
     </div>

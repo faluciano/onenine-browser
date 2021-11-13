@@ -74,6 +74,14 @@ def browser(request, context, load_template):
             dir = os.path.normpath(f'onenine_priv/{request.user}')
             print("Invalid user request")
 
+    # print(dir.is_file)
+
+    if os.path.isfile(dir):
+        context['is_file'] = True
+        context['file_type'] = os.path.splitext(dir)[1].lower()
+    else:
+        context['is_file'] = False
+
     directory = filetree.FileTree(dir)
     file_path = directory.get_contents()
     file_size = directory.get_size()
