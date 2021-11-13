@@ -88,6 +88,12 @@ def browser(request, context, load_template):
             # setting context to dictionary item of dataframe
             context['csv_data'] = cities.to_dict('dic').items()
 
+        if file_type == '.txt':
+            context['txt_data'] = "Dummy txt file data.\nHello!!\nHow is every one!!??"
+
+        if file_type == '.jpg' or file_type == '.jpeg' or file_type == '.png':
+            context['img_data'] = "https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/funny-dog-captions-1563456605.jpg"
+
     else:
         context['is_file'] = False
 

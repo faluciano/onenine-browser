@@ -59,7 +59,7 @@
                                 <div class="media align-items-center">
                                     {% if file.is_dir %}
                                         <i class="ni ni-folder-17 text-blue" style="padding-right: 20px"></i>
-                                    {% elif type == '.png' %}
+                                    {% elif type == '.png' or type == '.jpg' or type == '.jpeg' %}
                                         <i class="fas fa-file-image text-yellow" style="padding-right: 20px; font-size: 1.3em;"></i>
                                     {% elif type == '.csv' %}
                                         <i class="fas fa-file-csv text-orange" style="padding-right: 20px; font-size: 1.3em;"></i>
@@ -189,33 +189,36 @@
                     </div>
                     <!-- Card body -->
                     <div class="card-body">
-                        <p>{{ file_type }}</p>
                         {% if file_type == '.csv' %}
-<!--                            {{ csv_data }}-->
-                            <table class="table align-items-center table-flush">
-                                <thead>
-                                    <tr class="thead-light">
-                                        {% for key, value in csv_data %}
-                                            <th>
-                                                {{ key }}
-                                            </th>
-                                        {% endfor %}
-                                    </tr>
-                                </thead>
-                                <tbody class="list">
-                                    {% for key, value in csv_data %}
-                                        <tr>
-                                            {% for key, record in value.items %}
-                                                <td>
-                                                    {{ record }}
-                                                </td>
+                            <div class="table-responsive">
+                                <table class="table align-items-center table-flush">
+                                    <thead>
+                                        <tr class="thead-light">
+                                            {% for key, value in csv_data %}
+                                                <th>
+                                                    {{ key }}
+                                                </th>
                                             {% endfor %}
                                         </tr>
-                                    {% endfor %}
+                                    </thead>
+                                    <tbody class="list">
+                                        {% for key, value in csv_data %}
+                                            <tr>
+                                                {% for key, record in value.items %}
+                                                    <td>
+                                                        {{ record }}
+                                                    </td>
+                                                {% endfor %}
+                                            </tr>
+                                        {% endfor %}
 
-                                </tbody>
-                            </table>
-
+                                    </tbody>
+                                </table>
+                            </div>
+                        {% elif file_type == '.txt' %}
+                            <p style="white-space: pre-line">{{ txt_data }}</p>
+                        {% elif file_type == '.pgn' or file_type == '.jpg' or file_type == '.jpeg' %}
+                            <img src="{{img_data}}" alt="Dog" class="img-fluid">
                         {% endif %}
                     </div>
                 </div>
