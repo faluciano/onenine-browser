@@ -7,13 +7,13 @@ function populate_nav(curr_dir) {
         let item;
 
         if(i === 1) {
-            item = `<li class="breadcrumb-item"><a href="#"><i class="fas fa-home"></i></a></li>`;
+            item = `<li class="breadcrumb-item"><a href=""><i class="fas fa-home"></i></a></li>`;
         }
         else if(i === (dir_list.length - 1)) {
-            item = `<li class="breadcrumb-item active" aria-current="page"><a href="#">${dir_list[i]}</a></li>`;
+            item = `<li class="breadcrumb-item active" aria-current="page"><a href="">${dir_list[i]}</a></li>`;
         }
         else {
-            item = `<li class="breadcrumb-item"><a href="#">${dir_list[i]}</a></li>`;
+            item = `<li class="breadcrumb-item"><a href="">${dir_list[i]}</a></li>`;
         }
         file_nav.innerHTML += item;
     }
@@ -27,7 +27,7 @@ function populate_fld_btn(curr_dir) {
         $("#fld_card").css('display', 'block');
     });
 
-    $("#btn_close").click(function () {
+    $(".btn_close").click(function () {
         $("#fld_card").css('display', 'none');
     });
 
@@ -71,7 +71,6 @@ function populate_delete_btn(curr_dir) {
 
 // download button
 function populate_download_btn(curr_dir) {
-
     $(".download_btn").click(function() {
         // Finds the file name
         let file_name = $(this).closest("tr")
@@ -84,6 +83,38 @@ function populate_download_btn(curr_dir) {
 
         // Sends a post request
         send_post_request(file, path);
+    });
+}
+
+function populate_upload_btn(curr_dir) {
+    $("#upload_file").click(function() {
+
+        $("#upload_card").css('display', 'block');
+        $(".btn_close").click(function () {
+            $("#upload_card").css('display', 'none');
+        });
+        const myForm = document.getElementById("myForm");
+        const inpFile = document.getElementById("inpFile");
+
+        myForm.addEventListener("submit", ev => {
+            ev.preventDefault();
+
+            let endpoint = window.location.href;
+            endpoint = endpoint.substring(0, endpoint.lastIndexOf('/')) + '/browser.html';
+            const formData = new FormData();
+
+            formData.append("inpFile", inpFile.files[0]);
+            formData.append("path", curr_dir);
+            let csrftoken = Cookies.get('csrftoken');
+
+            fetch(endpoint, {
+                method: "post",
+                body: formData,
+                headers: {
+                    "X-CSRFToken": csrftoken
+                }
+            }).then(r => location.reload()).catch(console.error);
+        });
     });
 }
 
@@ -104,7 +135,6 @@ function send_post_request(file, path) {
 }
 
 window.onload = () => {
-
     const curr_dir = JSON.parse(document.getElementById('curr_path').textContent);
 
     populate_nav(curr_dir);
@@ -114,5 +144,7 @@ window.onload = () => {
     populate_delete_btn(curr_dir);
 
     populate_download_btn(curr_dir)
+
+    populate_upload_btn(curr_dir);
 
 }

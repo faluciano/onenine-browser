@@ -11,6 +11,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template import loader
 from django.urls import reverse
+from django.core.files.storage import FileSystemStorage
 
 from apps.home import filetree
 
@@ -58,6 +59,11 @@ def browser(request, context, load_template):
         os.mkdir('onenine_priv')
     if not os.path.exists(f'onenine_priv/{request.user}'):
         os.mkdir(f'onenine_priv/{request.user}')
+
+    if request.method == 'POST':
+        upload_file = request.FILES['inpFile']
+        fs = FileSystemStorage(location=request.POST['path'].replace('\\', '/'))
+        fs.save(upload_file.name, upload_file)
 
     if request.GET.get('dir') is None:
         dir = os.path.normpath(f'onenine_priv/{request.user}')

@@ -108,7 +108,7 @@
                           <h3 class="mb-0">Create a folder </h3>
                         </div>
                         <div class="col-4 text-right">
-                          <a class="" id="btn_close" style="cursor: pointer">&times;</a>
+                          <a class="btn_close" style="cursor: pointer">&times;</a>
                         </div>
                       </div>
                 </div>
@@ -133,13 +133,33 @@
                 <div class="card-body">
                     <div class="form-group">
                         <div class="col-8">
-                        <button class="btn btn-danger" id="delete_confirm">Delete</button>
-                        <button class="btn btn-light" id="delete_cancel">Cancel</button>
+                            <button class="btn btn-danger" id="delete_confirm">Delete</button>
+                            <button class="btn btn-light" id="delete_cancel">Cancel</button>
+                        </div>
                     </div>
                 </div>
             </div>
             <!--------------------------->
-
+            <!-----------Upload---------->
+            <div class="card" id="upload_card" style="width: 30em; position: absolute; top: 10%; left: 20%; display: none;">
+                <div class="card-header">
+                    <div class="row align-items-center">
+                        <div class="col-8">
+                            <h3 class="mb-0">Choose a file </h3>
+                        </div>
+                        <div class="col-4 text-right">
+                            <a class="btn_close" style="cursor: pointer">&times;</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <form class="form" id="myForm">
+                        <input type="file" name="inpFile" id="inpFile">
+                        <button type="submit">Upload File</button>
+                    </form>
+                </div>
+            </div>
+            <!--------------------------->
         </div>
     </div>
 </div>
