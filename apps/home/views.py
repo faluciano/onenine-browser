@@ -5,7 +5,9 @@ Copyright (c) 2019 - present AppSeed.us
 import json
 import os
 import shutil
+import csv
 
+import pandas as pd
 from django import template
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, HttpResponseRedirect
@@ -74,11 +76,18 @@ def browser(request, context, load_template):
             dir = os.path.normpath(f'onenine_priv/{request.user}')
             print("Invalid user request")
 
-    # print(dir.is_file)
-
     if os.path.isfile(dir):
         context['is_file'] = True
-        context['file_type'] = os.path.splitext(dir)[1].lower()
+
+        file_type = os.path.splitext(dir)[1].lower()
+        context['file_type'] = file_type
+
+        if file_type == '.csv':
+            # Generating dummy csv data frame
+            cities = pd.DataFrame([['Sacramento', 'California'], ['Miami', 'Florida']], columns=['City', 'State'])
+            # setting context to dictionary item of dataframe
+            context['csv_data'] = cities.to_dict('dic').items()
+
     else:
         context['is_file'] = False
 

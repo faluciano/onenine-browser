@@ -190,6 +190,33 @@
                     <!-- Card body -->
                     <div class="card-body">
                         <p>{{ file_type }}</p>
+                        {% if file_type == '.csv' %}
+<!--                            {{ csv_data }}-->
+                            <table class="table align-items-center table-flush">
+                                <thead>
+                                    <tr class="thead-light">
+                                        {% for key, value in csv_data %}
+                                            <th>
+                                                {{ key }}
+                                            </th>
+                                        {% endfor %}
+                                    </tr>
+                                </thead>
+                                <tbody class="list">
+                                    {% for key, value in csv_data %}
+                                        <tr>
+                                            {% for key, record in value.items %}
+                                                <td>
+                                                    {{ record }}
+                                                </td>
+                                            {% endfor %}
+                                        </tr>
+                                    {% endfor %}
+
+                                </tbody>
+                            </table>
+
+                        {% endif %}
                     </div>
                 </div>
             {% endif %}
