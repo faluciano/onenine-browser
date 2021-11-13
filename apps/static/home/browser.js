@@ -25,6 +25,8 @@ function populate_fld_btn(curr_dir) {
 
     $("#add_folder").click(function () {
         $("#fld_card").css('display', 'block');
+        $("#input-name").css('border-color', '#dee2e6');
+        $("#ValdtFldName").css('display', 'none');
     });
 
     $(".btn_close").click(function () {
@@ -33,8 +35,15 @@ function populate_fld_btn(curr_dir) {
 
     $("#btn_submit").click(function () {
         let dir_name = document.getElementById("input-name").value; // Name of the new folder
-        send_post_request({dir_name, dir}, "/addFolder");
-        document.getElementById("fld_card").style.display = "none";
+
+        if(dir_name === '') {
+            $("#input-name").css('border-color', '#fc4d44');
+            $("#ValdtFldName").css('display', 'block');
+        }
+        else {
+            send_post_request({dir_name, dir}, "/addFolder");
+            document.getElementById("fld_card").style.display = "none";
+        }
     });
 
 }
@@ -88,8 +97,11 @@ function populate_download_btn(curr_dir) {
 
 function populate_upload_btn(curr_dir) {
     $("#upload_file").click(function() {
-
         $("#upload_card").css('display', 'block');
+
+        $("#ValdtFile").css('display', 'none');
+        $(".custom-file-label").css('border-color', '#dee2e6');
+
         $(".btn_close").click(function () {
             $("#upload_card").css('display', 'none');
         });
@@ -99,21 +111,27 @@ function populate_upload_btn(curr_dir) {
         myForm.addEventListener("submit", ev => {
             ev.preventDefault();
 
-            let endpoint = window.location.href;
-            endpoint = endpoint.substring(0, endpoint.lastIndexOf('/')) + '/browser.html';
-            const formData = new FormData();
+            if(inpFile.files.length === 0) {
+                $("#ValdtFile").css('display', 'block');
+                $(".custom-file-label").css('border-color', '#fc4d44');
+            }
+            else {
+                let endpoint = window.location.href;
+                endpoint = endpoint.substring(0, endpoint.lastIndexOf('/')) + '/browser.html';
+                const formData = new FormData();
 
-            formData.append("inpFile", inpFile.files[0]);
-            formData.append("path", curr_dir);
-            let csrftoken = Cookies.get('csrftoken');
+                formData.append("inpFile", inpFile.files[0]);
+                formData.append("path", curr_dir);
+                let csrftoken = Cookies.get('csrftoken');
 
-            fetch(endpoint, {
-                method: "post",
-                body: formData,
-                headers: {
-                    "X-CSRFToken": csrftoken
-                }
-            }).then(r => location.reload()).catch(console.error);
+                fetch(endpoint, {
+                    method: "post",
+                    body: formData,
+                    headers: {
+                        "X-CSRFToken": csrftoken
+                    }
+                }).then(r => location.reload()).catch(console.error);
+            }
         });
     });
 }
