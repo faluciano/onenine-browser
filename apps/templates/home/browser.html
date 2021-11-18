@@ -49,7 +49,7 @@
                     {% if curr_dir != user_dir %}
                         <tr>
                             <td>
-                                <a class="name mb-0 text-sm" href="?dir={{ curr_dir }}\..">..</a>
+                                <a class="name mb-0 text-sm" href="?dir={{ curr_dir }}{{ path }}..">..</a>
                             </td>
                         </tr>
                     {% endif %}
@@ -183,7 +183,7 @@
                           <h3 class="mb-0">File Preview</h3>
                         </div>
                         <div class="col-4 text-right">
-                          <a class="btn_close" href="?dir={{ curr_dir }}\.." style="cursor: pointer">&times;</a>
+                          <a class="btn_close" href="?dir={{ curr_dir }}{{ path }}.." style="cursor: pointer">&times;</a>
                         </div>
                       </div>
                     </div>
@@ -217,7 +217,7 @@
                             </div>
                         {% elif file_type == '.txt' %}
                             <p style="white-space: pre-line">{{ txt_data }}</p>
-                        {% elif file_type == '.pgn' or file_type == '.jpg' or file_type == '.jpeg' %}
+                        {% elif file_type == '.png' or file_type == '.jpg' or file_type == '.jpeg' %}
                             <img src="{{img_data}}" alt="Dog" class="img-fluid">
                         {% endif %}
                     </div>

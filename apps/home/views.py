@@ -31,7 +31,13 @@ def pages(request):
     # All resource paths end in .html.
     # Pick out the html file name from the url. And load that template.
     try:
-        load_template = request.path.split('/')[-1]
+        load_template = ''
+        if os.name == 'posix':
+            temp = request.path.split('?')[0]
+            load_template=temp.split('/')[-1]
+        else:
+            load_template = request.path.split('/')[-1]
+        print(load_template)
         if load_template == 'admin':
             return HttpResponseRedirect(reverse('admin:index'))
         context['segment'] = load_template
@@ -72,10 +78,10 @@ def browser(request, context, load_template):
 
     else:
         dir = request.GET.get('dir')
-        if dir.split('\\')[1] != str(request.user):
+        path = '\\' if os.name != 'posix' else '/'
+        if dir.split(path)[1] != str(request.user):
             dir = os.path.normpath(f'onenine_priv/{request.user}')
             print("Invalid user request")
-
     if os.path.isfile(dir):
         context['is_file'] = True
 
@@ -106,7 +112,12 @@ def browser(request, context, load_template):
 
     context['files'] = zip(file_path, file_size, file_type)
     context['curr_path'] = directory.get_current_path()
-    context['curr_dir'] = directory.get_current_path().replace('\\\\', '\\')
+    if os.name == "posix":
+        context['curr_dir'] = directory.get_current_path()
+    else:
+        context['curr_dir'] = directory.get_current_path().replace('\\\\', '\\')
+
+    context['path'] = '/' if os.name == 'posix' else '\\'
 
     html_template = loader.get_template('home/' + load_template)
     return HttpResponse(html_template.render(context, request))

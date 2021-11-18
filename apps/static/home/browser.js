@@ -1,6 +1,6 @@
 // Updates navigation bar with current file path
 function populate_nav(curr_dir) {
-    let dir_list = curr_dir.split('\\\\');
+    let dir_list = curr_dir.split('/');
     let file_nav = document.getElementById("file_nav");
 
     for(let i = 1; i < dir_list.length; i++) {
@@ -58,7 +58,7 @@ function populate_delete_btn(curr_dir) {
                            .find(".name")
                            .text();
 
-        let file = curr_dir + "\\\\" + file_name;
+        let file = curr_dir + "/" + file_name;
         let path = "/delete";
 
         // display confirmation popup
@@ -87,7 +87,7 @@ function populate_download_btn(curr_dir) {
                            .text();
 
         // Create a file path
-        let file = curr_dir + "\\\\" + file_name;
+        let file = curr_dir + "/" + file_name;
         let path = "/download";
 
         // Sends a post request
@@ -138,7 +138,7 @@ function populate_upload_btn(curr_dir) {
 
 function send_post_request(file, path) {
     let url = window.location.href;     // url of current window
-    url = url.substring(0, url.lastIndexOf('/')) + path;    // post url
+    url = url.substring(0, url.lastIndexOf('?')) + path;    // post url
     let csrftoken = Cookies.get('csrftoken');   // csrftoken
 
     fetch(url, {
@@ -153,8 +153,8 @@ function send_post_request(file, path) {
 }
 
 window.onload = () => {
-    const curr_dir = JSON.parse(document.getElementById('curr_path').textContent);
-
+    let curr_dir = JSON.parse(document.getElementById('curr_path').textContent);
+    curr_dir = curr_dir.replace('\\\\','/');
     populate_nav(curr_dir);
 
     populate_fld_btn(curr_dir);
