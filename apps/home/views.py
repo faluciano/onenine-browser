@@ -5,15 +5,14 @@ Copyright (c) 2019 - present AppSeed.us
 import json
 import os
 import shutil
-import csv
 
 import pandas as pd
 from django import template
 from django.contrib.auth.decorators import login_required
+from django.core.files.storage import FileSystemStorage
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template import loader
 from django.urls import reverse
-from django.core.files.storage import FileSystemStorage
 
 from apps.home import filetree
 
