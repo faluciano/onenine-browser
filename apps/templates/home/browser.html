@@ -13,10 +13,16 @@
               </ol>
             </nav>
           </div>
-          <div class="col-lg-6 col-5 text-right">
+        {% if not is_file %}
+        <div class="col-lg-6 col-5 text-right">
             <button class="btn btn-sm btn-neutral" id="add_folder">New Folder</button>
             <button class="btn btn-sm btn-neutral" id="upload_file">Upload File</button>
-          </div>
+        </div>
+        {% else %}
+        <div class="col-lg-6 col-5 text-right">
+            <button class="btn btn-sm btn-neutral download_btn">Download</button>
+        </div>
+        {% endif %}
         </div>
       </div>
     </div>
@@ -190,7 +196,7 @@
                     <!-- Card body -->
                     <div class="card-body">
                         {% if file_type == '.csv' %}
-                            <div class="table-responsive">
+                            <div class="table-responsive" style="max-height: 75vh; overflow: auto;">
                                 <table class="table align-items-center table-flush">
                                     <thead>
                                         <tr class="thead-light">
