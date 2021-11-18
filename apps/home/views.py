@@ -34,7 +34,7 @@ def pages(request):
         load_template = ''
         if os.name == 'posix':
             temp = request.path.split('?')[0]
-            load_template=temp.split('/')[-1]
+            load_template = temp.split('/')[-1]
         else:
             load_template = request.path.split('/')[-1]
         if load_template == 'admin':
@@ -70,8 +70,8 @@ def browser(request, context, load_template):
     if request.method == 'POST':
         upload_file = request.FILES['inpFile']
         temp_path = request.POST['path'].replace('\\\\', '/')
-        if os.path.isfile(temp_path+'/'+upload_file.name):
-            os.remove(temp_path+'/'+upload_file.name)
+        if os.path.isfile(temp_path + '/' + upload_file.name):
+            os.remove(temp_path + '/' + upload_file.name)
         fs = FileSystemStorage(location=temp_path)
         fs.save(upload_file.name, upload_file)
 
@@ -91,16 +91,18 @@ def browser(request, context, load_template):
         context['file_type'] = file_type
 
         if file_type == '.csv':
-            # Generating dummy csv data frame
-            cities = pd.read_csv(dir)
+            # reading csv data file
+            csv_data = pd.read_csv(dir)
             # setting context to dictionary item of dataframe
-            context['csv_data'] = cities.to_dict('dict').items()
+            context['csv_header'] = csv_data.columns.values.tolist()
+            context['csv_data'] = csv_data.to_dict('records')
 
         if file_type == '.txt':
             context['txt_data'] = "Dummy txt file data.\nHello!!\nHow is every one!!??"
 
         if file_type == '.jpg' or file_type == '.jpeg' or file_type == '.png':
-            context['img_data'] = "https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/funny-dog-captions-1563456605.jpg"
+            context[
+                'img_data'] = "https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/funny-dog-captions-1563456605.jpg"
 
     else:
         context['is_file'] = False

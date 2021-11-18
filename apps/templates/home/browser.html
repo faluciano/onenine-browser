@@ -194,15 +194,15 @@
                                 <table class="table align-items-center table-flush">
                                     <thead>
                                         <tr class="thead-light">
-                                            {% for key, value in csv_data %}
+                                            {% for value in csv_header %}
                                                 <th>
-                                                    {{ key }}
+                                                    {{ value }}
                                                 </th>
                                             {% endfor %}
                                         </tr>
                                     </thead>
                                     <tbody class="list">
-                                        {% for key, value in csv_data %}
+                                        {% for value in csv_data %}
                                             <tr>
                                                 {% for key, record in value.items %}
                                                     <td>
