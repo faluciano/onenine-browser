@@ -118,7 +118,6 @@ def browser(request, context, load_template):
         context['curr_dir'] = directory.get_current_path().replace('\\\\', '\\')
 
     context['path'] = '/' if os.name == 'posix' else '\\'
-
     html_template = loader.get_template('home/' + load_template)
     return HttpResponse(html_template.render(context, request))
 
