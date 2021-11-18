@@ -37,7 +37,6 @@ def pages(request):
             load_template=temp.split('/')[-1]
         else:
             load_template = request.path.split('/')[-1]
-        print(load_template)
         if load_template == 'admin':
             return HttpResponseRedirect(reverse('admin:index'))
         context['segment'] = load_template
@@ -70,7 +69,10 @@ def browser(request, context, load_template):
 
     if request.method == 'POST':
         upload_file = request.FILES['inpFile']
-        fs = FileSystemStorage(location=request.POST['path'].replace('\\', '/'))
+        temp_path = request.POST['path'].replace('\\\\', '/')
+        if os.path.isfile(temp_path+'/'+upload_file.name):
+            os.remove(temp_path+'/'+upload_file.name)
+        fs = FileSystemStorage(location=temp_path)
         fs.save(upload_file.name, upload_file)
 
     if request.GET.get('dir') is None:
@@ -90,9 +92,9 @@ def browser(request, context, load_template):
 
         if file_type == '.csv':
             # Generating dummy csv data frame
-            cities = pd.DataFrame([['Sacramento', 'California'], ['Miami', 'Florida']], columns=['City', 'State'])
+            cities = pd.read_csv(dir)
             # setting context to dictionary item of dataframe
-            context['csv_data'] = cities.to_dict('dic').items()
+            context['csv_data'] = cities.to_dict('dict').items()
 
         if file_type == '.txt':
             context['txt_data'] = "Dummy txt file data.\nHello!!\nHow is every one!!??"
