@@ -20,7 +20,7 @@
         </div>
         {% else %}
         <div class="col-lg-6 col-5 text-right">
-            <button class="btn btn-sm btn-neutral download_btn">Download</button>
+            <a href="?download={{ curr_dir }}" class="btn btn-sm btn-neutral">Download</a>
         </div>
         {% endif %}
         </div>
@@ -96,7 +96,7 @@
                                     <div class="dropdown-menu dropdown-menu-right">
                                         <button class="dropdown-item delete_btn">Delete</button>
                                         {% if file.is_file %}
-                                            <button class="dropdown-item download_btn">Download</button>
+                                            <a href="?download={{ file }}" class="dropdown-item">Download</a>
                                         {% endif %}
                                     </div>
                                 </div>

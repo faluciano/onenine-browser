@@ -77,23 +77,6 @@ function populate_delete_btn(curr_dir) {
     });
 }
 
-// download button
-function populate_download_btn(curr_dir) {
-    $(".download_btn").click(function() {
-        // Finds the file name
-        let file_name = $(this).closest("tr")
-                           .find(".name")
-                           .text();
-
-        // Create a file path
-        let file = curr_dir + "/" + file_name;
-        let path = "/download";
-
-        // Sends a post request
-        send_post_request(file, path);
-    });
-}
-
 function populate_upload_btn(curr_dir) {
     $("#upload_file").click(function() {
         $("#upload_card").css('display', 'block');
@@ -159,8 +142,6 @@ window.onload = () => {
     populate_fld_btn(curr_dir);
     
     populate_delete_btn(curr_dir);
-
-    populate_download_btn(curr_dir)
 
     populate_upload_btn(curr_dir);
 

@@ -45,8 +45,6 @@ def pages(request):
             return create_folder(request, context)
         if load_template == 'delete':
             return delete(request, context)
-        if load_template == 'download':
-            return download(request, context)
         html_template = loader.get_template('home/' + load_template)
         return HttpResponse(html_template.render(context, request))
 
@@ -74,7 +72,21 @@ def browser(request, context, load_template):
         fs = FileSystemStorage(location=temp_path)
         fs.save(upload_file.name, upload_file)
 
-    if request.GET.get('dir') is None:
+    # download request
+    if request.GET.get('download'):
+        dir = os.path.normpath(request.GET.get('download'))
+        # redirect to not found page in case user make an invalid request
+        path = '\\' if os.name != 'posix' else '/'
+        if dir.split(path)[1] != str(request.user):
+            html_template = loader.get_template('home/page-404.html')
+            return HttpResponse(html_template.render(context, request))
+
+        # response for download
+        response = HttpResponse(open(dir, 'rb').read(), content_type="application/file")
+        response['Content-Disposition'] = 'inline; filename=' + os.path.basename(dir)
+        return response
+
+    elif request.GET.get('dir') is None:
         dir = os.path.normpath(f'onenine_priv/{request.user}')
 
     else:
@@ -142,13 +154,5 @@ def delete(request, context):
         os.remove(path)
     else:
         shutil.rmtree(path)
-    html_template = loader.get_template('home/browser.html')
-    return HttpResponse(html_template.render(context, request))
-
-
-def download(request, context):
-    post_data = json.loads(request.body.decode("utf-8"))
-    print(post_data['file'])
-
     html_template = loader.get_template('home/browser.html')
     return HttpResponse(html_template.render(context, request))
