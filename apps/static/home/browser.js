@@ -1,11 +1,10 @@
 // Updates navigation bar with current file path
 function populate_nav(curr_dir) {
-    let dir_list = curr_dir.split('\\\\');
+    let dir_list = curr_dir.split('/');
     let file_nav = document.getElementById("file_nav");
-
+    
     for(let i = 1; i < dir_list.length; i++) {
         let item;
-
         if(i === 1) {
             item = `<li class="breadcrumb-item"><a href=""><i class="fas fa-home"></i></a></li>`;
         }
@@ -154,7 +153,7 @@ function send_post_request(file, path) {
 
 window.onload = () => {
     let curr_dir = JSON.parse(document.getElementById('curr_path').textContent);
-
+    curr_dir = curr_dir.replaceAll('\\\\','/'); 
     populate_nav(curr_dir);
 
     populate_fld_btn(curr_dir);
