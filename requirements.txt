@@ -15,5 +15,4 @@ easy-thumbnails==2.7.2
 django-mptt==0.13.4
 django-polymorphic==3.0.0
 Pillow==8.4.0
-
-pandas~=1.2.4
+pandas==1.3.4
