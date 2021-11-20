@@ -107,10 +107,10 @@ def browser(request, context, load_template):
             # setting context to dictionary item of dataframe
             context['csv_header'] = csv_data.columns.values.tolist()
             context['csv_data'] = csv_data.to_dict('records')
-
         if file_type == '.txt':
-            context['txt_data'] = "Dummy txt file data.\nHello!!\nHow is every one!!??"
-
+            txt_file = open(dir, "r+", encoding='UTF-8')
+            txt_content = txt_file.read()
+            context['txt_data'] = txt_content
         if file_type == '.jpg' or file_type == '.jpeg' or file_type == '.png':
             context[
                 'img_data'] = "https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/funny-dog-captions-1563456605.jpg"
