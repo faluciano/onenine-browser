@@ -6,13 +6,13 @@ function populate_nav(curr_dir) {
     for(let i = 1; i < dir_list.length; i++) {
         let item;
         if(i === 1) {
-            item = `<li class="breadcrumb-item"><a href=""><i class="fas fa-home"></i></a></li>`;
+            item = `<li class="breadcrumb-item text-primary"><a><i class="fas fa-home"></i></a></li>`;
         }
         else if(i === (dir_list.length - 1)) {
-            item = `<li class="breadcrumb-item active" aria-current="page"><a href="">${dir_list[i]}</a></li>`;
+            item = `<li class="breadcrumb-item active" aria-current="page"><a>${dir_list[i]}</a></li>`;
         }
         else {
-            item = `<li class="breadcrumb-item"><a href="">${dir_list[i]}</a></li>`;
+            item = `<li class="breadcrumb-item text-primary"><a>${dir_list[i]}</a></li>`;
         }
         file_nav.innerHTML += item;
     }
