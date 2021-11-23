@@ -224,7 +224,7 @@
                         {% elif file_type == '.txt' %}
                             <p style="white-space: pre-line">{{ txt_data }}</p>
                         {% elif file_type == '.png' or file_type == '.jpg' or file_type == '.jpeg' %}
-                            <img src="{{img_data}}" alt="Dog" class="img-fluid">
+                            <img src="data:image;base64,{{ img_data }}" alt="Dog" class="img-fluid">
                         {% endif %}
                     </div>
                 </div>
