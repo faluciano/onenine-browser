@@ -5,6 +5,7 @@ Copyright (c) 2019 - present AppSeed.us
 import json
 import os
 import shutil
+from base64 import b64encode
 
 import pandas as pd
 from django import template
@@ -15,7 +16,6 @@ from django.template import loader
 from django.urls import reverse
 
 from apps.home import filetree
-
 
 @login_required(login_url="/login/")
 def index(request):
@@ -112,8 +112,10 @@ def browser(request, context, load_template):
             txt_content = txt_file.read()
             context['txt_data'] = txt_content
         if file_type == '.jpg' or file_type == '.jpeg' or file_type == '.png':
-            context[
-                'img_data'] = "https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/funny-dog-captions-1563456605.jpg"
+            img = ''
+            with open(dir,"rb") as image:
+                img = b64encode(image.read()).decode('utf-8')
+            context['img_data'] = img
 
     else:
         context['is_file'] = False
