@@ -29,12 +29,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'easy_thumbnails',
-    'filer',
-    'mptt',
     'apps.home'  # Enable the inner home (home)
 ]
-THUMBNAIL_HIGH_RESOLUTION = True
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
