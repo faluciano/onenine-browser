@@ -73,9 +73,9 @@
                                         <i class="fas fa-file-alt text-green" style="padding-right: 20px; font-size: 1.3em;"></i>
                                     {% endif %}
                                     {% if file.is_dir %}
-                                        <a class="name mb-0 text-sm" href="?dir={{ file }}">{{ file.name }}</a>
+                                        <a class="name mb-0 text-sm" href="?dir={{ file }}" style="max-width: 25em; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">{{ file.name }}</a>
                                     {% elif file.is_file %}
-                                        <a class="name mb-0 text-sm" href="?dir={{ file }}">{{ file.name }}</a>
+                                        <a class="name mb-0 text-sm" href="?dir={{ file }}" style="max-width: 25em; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">{{ file.name }}</a>
                                     {% endif %}
                                 </div>
                             </td>
@@ -175,7 +175,21 @@
                         </div>
                         <button class="btn btn-sm btn-outline-primary shadow-none" type="submit">Upload File</button>
                     </form>
-
+                    <div class="progress-wrapper" id="progress-wrapper" style="display: none;">
+                        <div class="progress-info">
+                            <div class="progress-label">
+                                <span>File uploaded</span>
+                            </div>
+                            <div class="progress-percentage">
+                                <span id="progress"></span>
+                            </div>
+                        </div>
+                        <div class="progress">
+                            <div class="progress-bar bg-success" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 60%;"></div>
+                        </div>
+                        <button class="btn btn-sm btn-danger shadow-none" id="cancel" style="display: block;">Cancel</button>
+                        <button class="btn btn-sm btn-success shadow-none" id="done" style="display: none;">done</button>
+                    </div>
                 </div>
             </div>
             <!--------------------------->

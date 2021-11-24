@@ -65,6 +65,7 @@ def browser(request, context, load_template):
         os.mkdir(f'onenine_priv/{request.user}')
 
     if request.method == 'POST':
+        print("POST request made")
         upload_file = request.FILES['inpFile']
         temp_path = request.POST['path'].replace('\\\\', '/')
         if os.path.isfile(temp_path + '/' + upload_file.name):

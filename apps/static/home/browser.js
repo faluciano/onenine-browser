@@ -86,6 +86,8 @@ function populate_upload_btn(curr_dir) {
 
         $(".btn_close").click(function () {
             $("#upload_card").css('display', 'none');
+            $("#progress-wrapper").css('display', 'none');
+            location.reload();
         });
         const myForm = document.getElementById("myForm");
         const inpFile = document.getElementById("inpFile");
@@ -105,21 +107,65 @@ function populate_upload_btn(curr_dir) {
                 $(".custom-file-label").css('border-color', '#fc4d44');
             }
             else {
+                $("#myForm").css('display', 'none');
+                $("#progress-wrapper").css('display', 'block');
+                $(".progress-label").text("Uploading " + $("#inpFile").val().split('\\').pop());
+
                 let endpoint = window.location.href;
                 endpoint = endpoint.substring(0, endpoint.lastIndexOf('/')) + '/browser.html';
                 const formData = new FormData();
 
-                formData.append("inpFile", inpFile.files[0]);
-                formData.append("path", curr_dir);
                 let csrftoken = Cookies.get('csrftoken');
 
-                fetch(endpoint, {
-                    method: "post",
-                    body: formData,
+                formData.append("inpFile", inpFile.files[0]);
+                formData.append("path", curr_dir);
+
+                $.ajax({
+                    type:'POST',
+                    url: endpoint,
+                    enctype: 'multipart/form-data',
+                    data: formData,
                     headers: {
                         "X-CSRFToken": csrftoken
-                    }
-                }).then(r => location.reload()).catch(console.error);
+                    },
+                    beforeSend: function() {
+
+                    },
+                    xhr: function() {
+                        const xhr = new window.XMLHttpRequest();
+                        xhr.upload.addEventListener('progress', e=>{
+                            if(e.lengthComputable) {
+                                const percent = e.loaded / e.total * 100;
+                                $('.progress-bar').css('width', percent + '%');
+                                $('#progress').html(percent.toFixed() + ' %');
+                            }
+                        })
+                        $("#cancel").click(function () {
+                            $("#progress-wrapper").css('display', 'none');
+                            $("#myForm").css('display', 'block');
+                            xhr.abort();
+                        });
+                        return xhr;
+                    },
+                    success: function(response) {
+                        $(".progress-label").text("File Uploaded");
+                        $("#cancel").css('display', 'none')
+                        $("#done").css('display', 'block');
+
+                        $("#done").click(function () {
+                            $("#upload_card").css('display', 'none');
+                            $("#progress-wrapper").css('display', 'block');
+                            $("#progress-wrapper").css('display', 'none');
+                            location.reload();
+                        });
+                    },
+                    error: function(error) {
+                        console.log(error)
+                    },
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                });
             }
         });
     });
