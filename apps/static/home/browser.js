@@ -90,6 +90,13 @@ function populate_upload_btn(curr_dir) {
         const myForm = document.getElementById("myForm");
         const inpFile = document.getElementById("inpFile");
 
+        $("#inpFile").change(function() {
+            let file = $("#inpFile").val().split('\\').pop();
+            if(file == "")
+                $("#inFileLabel").text("Choose a file...");
+            else
+                $("#inFileLabel").text(file);
+        });
         myForm.addEventListener("submit", ev => {
             ev.preventDefault();
 
