@@ -103,7 +103,7 @@ def browser(request, context, load_template):
 
         if file_type == '.csv':
             # reading csv data file
-            csv_data = pd.read_csv(dir)
+            csv_data = pd.read_csv(dir, nrows=999)
             # setting context to dictionary item of dataframe
             context['csv_header'] = csv_data.columns.values.tolist()
             context['csv_data'] = csv_data.to_dict('records')
