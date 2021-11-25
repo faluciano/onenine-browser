@@ -60,20 +60,18 @@ function populate_delete_btn(curr_dir) {
         let file = curr_dir + "/" + file_name;
         let path = "/delete";
 
-        // display confirmation popup
-        $("#dlt_card").css('display', 'block');
-
-        $("#delete_cancel").click(function (){
-            document.getElementById("dlt_card").style.display = "none";
-        });
-
-        // Makes post request on confirmation
-        $("#delete_confirm").click(function (){
+        swal({
+            title: "Are you sure?",
+            text: "Once deleted, you will not be able to recover this file!",
+            icon: "warning",
+            dangerMode: true,
+            buttons: true,
+        })
+        .then((willDelete) => {
+          if (willDelete) {
             send_post_request(file, path);
-
-            $("#dlt_card").css('display', 'none');
+          }
         });
-
     });
 }
 
@@ -107,9 +105,12 @@ function populate_upload_btn(curr_dir) {
                 $(".custom-file-label").css('border-color', '#fc4d44');
             }
             else {
+
+                let file_name = $("#inpFile").val().split('\\').pop();
+
                 $("#myForm").css('display', 'none');
                 $("#progress-wrapper").css('display', 'block');
-                $(".progress-label").text("Uploading " + $("#inpFile").val().split('\\').pop());
+                $(".progress-label").text("Uploading " + file_name);
 
                 let endpoint = window.location.href;
                 endpoint = endpoint.substring(0, endpoint.lastIndexOf('/')) + '/browser.html';
@@ -148,19 +149,28 @@ function populate_upload_btn(curr_dir) {
                         return xhr;
                     },
                     success: function(response) {
-                        $(".progress-label").text("File Uploaded");
-                        $("#cancel").css('display', 'none')
-                        $("#done").css('display', 'block');
-
-                        $("#done").click(function () {
-                            $("#upload_card").css('display', 'none');
-                            $("#progress-wrapper").css('display', 'block');
-                            $("#progress-wrapper").css('display', 'none');
-                            location.reload();
+                        $("#upload_card").css('display', 'none');
+                        swal({
+                          title: "Done!",
+                          text: "file upload successful!",
+                          icon: "success",
+                          button: "Done",
+                        })
+                        .then((willDelete) => {
+                          location.reload();
                         });
                     },
                     error: function(error) {
-                        console.log(error)
+                        $("#upload_card").css('display', 'none');
+                        swal({
+                          title: "Error!",
+                          text: "file upload unsuccessful!",
+                          icon: "error",
+                          button: "Done",
+                        })
+                        .then((willDelete) => {
+                          location.reload();
+                        });
                     },
                     cache: false,
                     contentType: false,
@@ -189,7 +199,7 @@ function send_post_request(file, path) {
 
 window.onload = () => {
     let curr_dir = JSON.parse(document.getElementById('curr_path').textContent);
-    curr_dir = curr_dir.replaceAll('\\\\','/'); 
+    curr_dir = curr_dir.replaceAll('\\\\','/');
     populate_nav(curr_dir);
 
     populate_fld_btn(curr_dir);
