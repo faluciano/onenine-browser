@@ -1,0 +1,257 @@
+{% extends 'layouts/base.html' %}
+
+{% block title %} Profile {% endblock title %}
+
+{% block content %}
+<div class="header bg-primary pb-6">
+    <div class="container-fluid">
+      <div class="header-body">
+        <div class="row align-items-center py-4">
+        </div>
+      </div>
+    </div>
+  </div>
+<!-- Page content -->
+
+<div class="container-fluid mt--6">
+
+    <div class="row">
+        <div class="col">
+            <div class="card">
+                <!-- Card header -->
+                <div class="card-header border-0">
+                    <h3 class="mb-0">One Click Data Analysis</h3>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-l-4 col-md-3">
+                            <div class="card card-stats">
+                             <!-- Card body -->
+                             <div class="card-body">
+                               <div class="row">
+                                 <div class="col">
+                                   <h2 class="card-title text-uppercase  mb-0 ">Choose a file</h2>
+                                 </div>
+                               </div>
+                               <p class="mt-3 mb-0 text-sm">
+                                 </p><div class="custom-control custom-radio mb-3">
+                                   <input required="" name="custom-radio-1" class="custom-control-input" id="radio-brows" checked="" type="radio">
+                                   <label class="custom-control-label" for="radio-brows">Choose a file from file browser</label>
+                                 </div>
+                               <p></p>
+                             </div>
+                            </div>
+                        </div>
+                        <div class="col-l-4 col-md-3">
+                            <div class="card card-stats">
+                             <!-- Card body -->
+                             <div class="card-body">
+                               <div class="row">
+                                 <div class="col">
+                                   <h2 class="card-title text-uppercase  mb-0 ">Local file</h2>
+                                   <h5 class=" mb-0 ">CSV,XLSX and JSON Files supported</h5>
+                                 </div>
+                               </div>
+                               <p class="mt-3 mb-0 text-sm">
+                                 </p><div class="custom-control custom-radio mb-3">
+                                   <input name="custom-radio-1" class="custom-control-input" id="radio-upload" type="radio">
+                                   <label class="custom-control-label" for="radio-upload">Upload files from your computer</label>
+                                 </div>
+                               <p></p>
+                             </div>
+                            </div>
+                        </div>
+                        <div class="col-l-4 col-md-3">
+                            <div class="card card-stats">
+                             <!-- Card body -->
+                                 <div class="card-body">
+                                       <div class="row">
+                                            <div class="col">
+                                                <h2 class="card-title text-uppercase  mb-0 ">Database</h2>
+                                            </div>
+                                       </div>
+                                       <p class="mt-3 mb-0 text-sm">
+                                         </p><div class="custom-control custom-radio mb-3">
+                                           <input name="custom-radio-1" class="custom-control-input" id="radio-db" type="radio">
+                                           <label class="custom-control-label" for="radio-db">Select data from database</label>
+                                         </div>
+                                       <p></p>
+                                 </div>
+                            </div>
+                        </div>
+                        <div class="col-l-4 col-md-3">
+                            <div class="card card-stats">
+                             <!-- Card body -->
+                             <div class="card-body">
+                               <div class="row">
+                                 <div class="col">
+                                   <h2 class="card-title text-uppercase  mb-0 ">URL or S3</h2>
+                                 </div>
+                               </div>
+                               <p class="mt-3 mb-0 text-sm">
+                                 </p><div class="custom-control custom-radio mb-3">
+                                   <input name="custom-radio-1" class="custom-control-input" id="radio-s3" type="radio">
+                                   <label class="custom-control-label" for="radio-s3">Select your file from URL or AWS S3</label>
+                                 </div>
+                               <p></p>
+                             </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col">
+
+                            <div class="card" id="browser_table" style="display: block">
+                              <!-- Card header -->
+                                <div class="card-header border-0">
+                                    <h3 class="mb-0">File Browser</h3>
+                                </div>
+
+                                <table class="table align-items-center table-flush">
+                                    <thead class="thead-light">
+                                        <tr>
+                                            <th>
+                                                Name
+                                            </th>
+                                            <th>
+                                                Size
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="list">
+
+                                        {% if curr_dir != user_dir %}
+                                            <tr>
+                                                <td>
+                                                    <a class="name mb-0 text-sm" href="?dir={{ curr_dir }}{{ path }}..">..</a>
+                                                </td>
+                                            </tr>
+                                        {% endif %}
+                                        {% for file, size, type in files %}
+                                            <tr>
+                                                <td class="text-dark">
+                                                    <div class="media align-items-center">
+                                                        {% if file.is_dir %}
+                                                            <i class="ni ni-folder-17 text-blue" style="padding-right: 20px"></i>
+                                                        {% elif type == '.png' or type == '.jpg' or type == '.jpeg' %}
+                                                            <i class="fas fa-file-image text-yellow" style="padding-right: 20px; font-size: 1.3em;"></i>
+                                                        {% elif type == '.csv' %}
+                                                            <i class="fas fa-file-csv text-orange" style="padding-right: 20px; font-size: 1.3em;"></i>
+                                                        {% else %}
+                                                            <i class="fas fa-file-alt text-green" style="padding-right: 20px; font-size: 1.3em;"></i>
+                                                        {% endif %}
+                                                        {% if file.is_dir %}
+                                                            <a class="name mb-0 text-sm" href="?dir={{ file }}" style="max-width: 25em; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">{{ file.name }}</a>
+                                                        {% elif file.is_file %}
+                                                            <a class="name mb-0 text-sm" href="?dir={{ file }}" style="max-width: 25em; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">{{ file.name }}</a>
+                                                        {% endif %}
+                                                    </div>
+                                                </td>
+                                                <td class="text-dark">
+                                                    <div>
+                                                        {% if file.is_dir %}
+                                                            <span class="status">--</span>
+                                                        {% elif file.is_file %}
+                                                            <span class="status"> {{ size }}</span>
+                                                        {% endif %}
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <!-------File preview-------->
+                            {% if is_file %}
+                                <div class="card" id="file_preview">
+                                    <!-- Card header -->
+                                    <div class="card-header border-0">
+                                        <div class="row align-items-center">
+                                        <div class="col-8">
+                                          <h3 class="mb-0">File Preview</h3>
+                                        </div>
+                                        <div class="col-4 text-right">
+                                          <a class="btn_close" href="?dir={{ curr_dir }}{{ path }}.." style="cursor: pointer">&times;</a>
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <!-- Card body -->
+                                    <div class="card-body">
+                                        {% if file_type == '.csv' %}
+                                            <div class="table-responsive" style="max-height: 75vh; overflow: auto;">
+                                                <table class="table align-items-center table-flush">
+                                                    <thead>
+                                                        <tr class="thead-light">
+                                                            {% for value in csv_header %}
+                                                                <th>
+                                                                    {{ value }}
+                                                                </th>
+                                                            {% endfor %}
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody class="list">
+                                                        {% for value in csv_data %}
+                                                            <tr>
+                                                                {% for key, record in value.items %}
+                                                                    <td>
+                                                                        {{ record }}
+                                                                    </td>
+                                                                {% endfor %}
+                                                            </tr>
+                                                        {% endfor %}
+
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        {% elif file_type == '.txt' %}
+                                            <p style="white-space: pre-line">{{ txt_data }}</p>
+                                        {% elif file_type == '.png' or file_type == '.jpg' or file_type == '.jpeg' %}
+                                            <img src="data:image;base64,{{ img_data }}" alt="Image" class="img-fluid">
+                                        {% else %}
+                                            <h2>Preview not available</h2>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            {% endif %}
+                            <!--------------------------->
+                        </div>
+                    </div>
+
+                </div>
+
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}
+
+<!-- Specific JS goes HERE -->
+{% block javascripts %}
+
+<script>
+
+    $("#radio-brows").click(function () {
+        console.log("HELLO");
+       $("#browser_table").css('display', 'block');
+    });
+
+    $("#radio-upload").click(function() {
+        $("#browser_table").css('display', 'none');
+    });
+
+    $("#radio-db").click(function() {
+        $("#browser_table").css('display', 'none');
+    });
+
+    $("#radio-s3").click(function() {
+        $("#browser_table").css('display', 'none');
+    });
+
+</script>
+
+{% endblock javascripts %}

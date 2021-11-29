@@ -17,6 +17,7 @@ from django.urls import reverse
 
 from apps.home import filetree
 
+
 @login_required(login_url="/login/")
 def index(request):
     context = {'segment': 'index'}
@@ -45,6 +46,8 @@ def pages(request):
             return create_folder(request, context)
         if load_template == 'delete':
             return delete(request, context)
+        if load_template == 'explore.html':
+            return explore(request, context, load_template)
         html_template = loader.get_template('home/' + load_template)
         return HttpResponse(html_template.render(context, request))
 
@@ -94,8 +97,11 @@ def browser(request, context, load_template):
         dir = request.GET.get('dir')
         path = '\\' if os.name != 'posix' else '/'
         if dir.split(path)[1] != str(request.user):
-            dir = os.path.normpath(f'onenine_priv/{request.user}')
-            print("Invalid user request")
+            html_template = loader.get_template('home/page-404.html')
+            return HttpResponse(html_template.render(context, request))
+
+    # File preview
+
     if os.path.isfile(dir):
         context['is_file'] = True
 
@@ -114,7 +120,74 @@ def browser(request, context, load_template):
             context['txt_data'] = txt_content
         if file_type == '.jpg' or file_type == '.jpeg' or file_type == '.png':
             img = ''
-            with open(dir,"rb") as image:
+            with open(dir, "rb") as image:
+                img = b64encode(image.read()).decode('utf-8')
+            context['img_data'] = img
+
+    else:
+        context['is_file'] = False
+
+    directory = filetree.FileTree(dir)
+    file_path = directory.get_contents()
+    file_size = directory.get_size()
+    file_type = directory.get_type()
+
+    context['user_dir'] = os.path.normpath(f'onenine_priv/{request.user}')
+
+    context['files'] = zip(file_path, file_size, file_type)
+    context['curr_path'] = directory.get_current_path()
+    if os.name == "posix":
+        context['curr_dir'] = directory.get_current_path()
+    else:
+        context['curr_dir'] = directory.get_current_path().replace('\\\\', '\\')
+
+    context['path'] = '/' if os.name == 'posix' else '\\'
+    html_template = loader.get_template('home/' + load_template)
+    return HttpResponse(html_template.render(context, request))
+
+
+def explore(request, context, load_template):
+    if not os.path.exists('onenine_priv'):
+        os.mkdir('onenine_priv')
+    if not os.path.exists(f'onenine_priv/{request.user}'):
+        os.mkdir(f'onenine_priv/{request.user}')
+
+    if request.GET.get('dir') is None:
+        dir = os.path.normpath(f'onenine_priv/{request.user}')
+
+    else:
+        dir = request.GET.get('dir')
+        path = '\\' if os.name != 'posix' else '/'
+        if dir.split(path)[1] != str(request.user):
+            html_template = loader.get_template('home/page-404.html')
+            return HttpResponse(html_template.render(context, request))
+
+    # File preview
+
+    if os.path.isfile(dir):
+
+        # Here file path is the uploaded file
+        # It can be used to read / update the file
+        # In this case we are using it to read the file for preview
+
+        context['is_file'] = True
+
+        file_type = os.path.splitext(dir)[1].lower()
+        context['file_type'] = file_type
+
+        if file_type == '.csv':
+            # reading csv data file
+            csv_data = pd.read_csv(dir, nrows=999)
+            # setting context to dictionary item of dataframe
+            context['csv_header'] = csv_data.columns.values.tolist()
+            context['csv_data'] = csv_data.to_dict('records')
+        if file_type == '.txt':
+            txt_file = open(dir, "r+", encoding='UTF-8')
+            txt_content = txt_file.read()
+            context['txt_data'] = txt_content
+        if file_type == '.jpg' or file_type == '.jpeg' or file_type == '.png':
+            img = ''
+            with open(dir, "rb") as image:
                 img = b64encode(image.read()).decode('utf-8')
             context['img_data'] = img
 
