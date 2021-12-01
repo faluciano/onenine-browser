@@ -66,7 +66,6 @@ def browser(request, context, load_template):
         os.mkdir('onenine_priv')
     if not os.path.exists(f'onenine_priv/{request.user}'):
         os.mkdir(f'onenine_priv/{request.user}')
-
     if request.method == 'POST':
         print("POST request made")
         upload_file = request.FILES['inpFile']
@@ -102,7 +101,7 @@ def browser(request, context, load_template):
 
     # File preview
 
-    if os.path.isfile(dir):
+    if os.path.isfile(dir) and dir.split('.')[-1] != "zip":
         context['is_file'] = True
 
         file_type = os.path.splitext(dir)[1].lower()
@@ -164,7 +163,7 @@ def explore(request, context, load_template):
 
     # File preview
 
-    if os.path.isfile(dir):
+    if os.path.isfile(dir) and dir.split('.')[-1] != "zip":
 
         # Here file path is the uploaded file
         # It can be used to read / update the file
